@@ -1,0 +1,9 @@
+{
+	"appenders": [
+		{
+			"type": "dateFile",
+			"filename": "./logs/zjtqs.log",
+			"pattern": "yyyy-MM-dd"
+		}
+	]
+}
