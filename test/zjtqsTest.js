@@ -7,7 +7,7 @@ var assert = require('chai').assert
   , Producer = require('../handlers/Producer')
   , Consumer = require('../handlers/Consumer')
   , Utilities = require('../lib/Utilities')
-  , SOCKET_TEMINAOR = '\xff\xff'
+  , CRLF = '\r\n'
   , PORT = 33333;
 
 function createClient() {
@@ -17,10 +17,10 @@ function createClient() {
   client.on('data', function(chunk) {
     var pos, res;
     data += chunk;
-    pos = data.indexOf(SOCKET_TEMINAOR);
+    pos = data.indexOf(CRLF);
     if (pos !== -1) {
       res = data.substr(0, pos);
-      data = data.substr(pos + SOCKET_TEMINAOR.length);
+      data = data.substr(pos + CRLF.length);
       client.emit('response', JSON.parse(res));
     }
   });
@@ -31,7 +31,7 @@ function createClient() {
 
   client.request = function(obj) {
     client.write(JSON.stringify(obj), 'utf8');
-    client.write(SOCKET_TEMINAOR);
+    client.write(CRLF);
   };
 
   return client;
@@ -245,7 +245,7 @@ suite('zjtqs', function() {
       });
 
       client.write('JSON.stringify(obj)', 'utf8');
-      client.write(SOCKET_TEMINAOR);
+      client.write(CRLF);
     });
 
     teardown(function(done) {

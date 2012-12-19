@@ -5,7 +5,7 @@ var Queue = require('./lib/Queue')
 log4js.configure('./log4js_configuration.json', {});
 exports.LOG = log4js;
 
-exports.SOCKET_TEMINATOR = '\xff\xff';
+exports.CRLF = '\r\n';
 
 exports.databaseConfig = {
   user: 'dbUser',
