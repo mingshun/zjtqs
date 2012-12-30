@@ -16,7 +16,7 @@ var SubmissionPopulationService = module.exports = function SubmissionPopulation
 SubmissionPopulationService.prototype.populate = function(id, callback) {
 
   var SQL_FIND_SUBMISSION_BY_ID = 'SELECT id, problem_id, code_language, code_file_size, code_file_md5, '
-    + 'code_file_sha1, use_file_io FROM zj_submission WHERE id=$1';
+    + 'code_file_sha1 FROM zj_submission WHERE id=$1';
 
   function findSubmissionById(id, callback) {
     pg.connect(config.databaseConfig, function(err, db) {

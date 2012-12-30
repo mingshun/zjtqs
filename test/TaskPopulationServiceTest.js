@@ -36,7 +36,6 @@ suite('TaskPopulationService', function() {
         assert.strictEqual(result['code_file_size'], dataSet.codeFileSize);
         assert.strictEqual(result['code_file_md5'], dataSet.codeFileMd5);
         assert.strictEqual(result['code_file_sha1'], dataSet.codeFileSha1);
-        assert.strictEqual(result['use_file_io'], false);
         assert.strictEqual(result['code_file'], dataSet.codeFile);
 
         assert.strictEqual(result['testcases'].length, dataSet.testcases.length);

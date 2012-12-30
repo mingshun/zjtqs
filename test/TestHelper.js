@@ -109,8 +109,8 @@ function addProblem(callback) {
       return callback(err);
     }
 
-    db.query('INSERT INTO zj_problem (title, description, base_name, time_limit, memory_limit) '
-      + 'VALUES ($1, $2, $3, $4, $5) RETURNING id', ['a+b', 'calculate a plus b.', 'aplusb', 1, 64], 
+    db.query('INSERT INTO zj_problem (title, description, time_limit, memory_limit) '
+      + 'VALUES ($1, $2, $3, $4) RETURNING id', ['a+b', 'calculate a plus b.', 1, 64], 
       function(err, result) {
         if (err) {
           return callback(err);
@@ -130,9 +130,9 @@ function addSubmission(callback) {
     }
 
     db.query('INSERT INTO zj_submission (user_id, problem_id, submit_date, code_language, code_file_size, '
-      + 'code_file_md5, code_file_sha1, use_file_io) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id', 
+      + 'code_file_md5, code_file_sha1) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id', 
       [dataSet.userId, dataSet.problemId, new Date(), dataSet.codeLanguage, dataSet.codeFileSize, 
-      dataSet.codeFileMd5, dataSet.codeFileSha1, false], function(err, result) {
+      dataSet.codeFileMd5, dataSet.codeFileSha1], function(err, result) {
         if (err) {
           return callback(err);
         }
