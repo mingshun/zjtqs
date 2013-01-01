@@ -57,11 +57,22 @@ Consumer.prototype.handlers = {
   'finish task': function(options) {
     var self = this
       , socket = this.socket
-      , resultPersistenceService = new ResultPersistenceService();
+      , resultPersistenceService = new ResultPersistenceService()
+      , logger = config.LOG.getLogger();
 
     // check state of consumer
     if (this.state !== Consumer.State.BUSY) {
       socket.response({result: 'failure', reason: 'state must be busy when taking task'});
+      return;
+    }
+
+    // check if error occured while judging
+    if (options && options.error) {
+      logger.warn('error message from judge engine: ' + options.error);
+      config.retryTasks.push(self.currentTask);
+      self.currentTask = null;
+      self.state = Consumer.State.IDLE;
+      socket.response({result: 'success'});
       return;
     }
 
@@ -75,7 +86,7 @@ Consumer.prototype.handlers = {
 
       resultPersistenceService.persist(options.result, function(err) {
         if (err) {
-          config.retryTasks.push(this.currentTask);
+          config.retryTasks.push(self.currentTask);
           self.currentTask = null;
           self.state = Consumer.State.IDLE;
           socket.response({result: 'failure', reason: 'internal error'});

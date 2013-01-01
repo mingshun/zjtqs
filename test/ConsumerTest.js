@@ -190,6 +190,28 @@ suite('Consumer', function() {
       consumer.handle({cmd: 'finish task', options: options});
     });
 
+    test('accuracy test when consumer returns error message', function(done) {
+      var res = {result: 'success'}
+        , task = {submission_id: dataSet.submissionId}
+        , options = {error: 'missing data files'}
+        , finishedTaskCount = consumer.finishedTaskCount
+        , retryTasks = config.retryTasks.size();
+
+      socket.on('error', function(err) {});
+      socket.on('callback', function() {
+        assert.deepEqual(socket.res, res);
+        assert.strictEqual(config.retryTasks.size(), retryTasks + 1);
+        assert.isNull(consumer.currentTask);
+        assert.strictEqual(consumer.state, Consumer.State.IDLE);
+        assert.strictEqual(consumer.finishedTaskCount, finishedTaskCount);
+        done();
+      });
+
+      consumer.currentTask = task;
+      consumer.state = Consumer.State.BUSY;
+      consumer.handle({cmd: 'finish task', options: options});
+    });
+
     test('accuracy test when error occurs while persisting data', function(done) {
       var res = {result: 'failure', reason: 'internal error'}
         , task = {submission_id: dataSet.submissionId}
